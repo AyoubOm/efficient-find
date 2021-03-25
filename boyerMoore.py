@@ -2,7 +2,7 @@ import string
 
 
 def build_delta1(pattern):
-	alphabet = string.ascii_lowercase + string.ascii_uppercase + ' '
+	alphabet = string.ascii_lowercase + string.ascii_uppercase + ' ' + string.punctuation
 	delta1 = {}
 	for c in alphabet: delta1[c] = -1
 	for i, c in enumerate(pattern): delta1[c] = i
@@ -42,7 +42,7 @@ def find(text, pattern):
 
 	delta1 = build_delta1(pattern)
 	delta2 = build_delta2(pattern)
-	print("delta2:", delta2)
+	nbMacthes = 0
 	i = M - 1
 
 	while i < N:
@@ -54,8 +54,10 @@ def find(text, pattern):
 		if j >= 0:
 			i += max(M-1-delta1[text[i]], delta2[j])
 		else:
-			print("Match at", i+1)
+			nbMacthes += 1
 			i += M + 1
+
+	print("Number of matches:", nbMacthes)
 
 
 

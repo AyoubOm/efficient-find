@@ -16,25 +16,35 @@ def build_delta1(pattern):
 
 def build_delta2(pattern):
 	M = len(pattern)
-	delta2 = [-1]*M
+	delta2 = [-1]*(M-1)+[1]
 
 	for j in range(M-2, -1, -1):
-		i = j-1
-		while i >= -1:
-			if i == -1 or pattern[i] != pattern[j]: # i == -1 in case of a suffix re-ocurence at the beginning of pattern
-				k = i+1
-				while k + j - i < M and pattern[k] == pattern[k+j-i]:
-					k += 1
-				if k + j - i == M:
-					delta2[j] = i+1
-					break
-			i -= 1
+		for i in range(M-2, -1, -1):
+			if i - (M-1-j) >= 0 and pattern[i - (M-1-j)] == pattern[j]: #checking that the beginning of re-occurence is not = pattern[j]
+				continue
+			
+			k = M-1
+			while k > j and i+k-(M-1) >= 0 and pattern[k] == pattern[i+k-(M-1)]:
+				k -= 1
+			if i+k-(M-1) < 0: # (M-1-k) suffix is matching with the beginning of the pattern
+				delta2[j] = k-j+M # (M-1-j) + M - (M-1-k) do like if we will move the pointer all the way to end
+								# and substract the matched subsuffix (example ABCXXXABC for j at second X for e.g)
+				break
+			elif k == j:
+				delta2[j] = i-(M-1-j)
+				delta2[j] = (j-delta2[j]) + (M-j-1)
+				break
 
+		if delta2[j] == -1:
+			delta2[j] = (M-j-1) + M # will move j to the end of the pattern + move it along all pattern (whole pattern shifted)
+
+	print(delta2)
 	return delta2
 
 
-
-pattern = "KBCAB"
+pattern = "ABCXXXABC"
+print(build_delta2(pattern))
+pattern = "ABYXCDEYX"
 print(build_delta2(pattern))
 
 

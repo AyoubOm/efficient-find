@@ -1,13 +1,8 @@
 import string
 
-def find(text, pattern):
-
-	delta1 = build_delta1(pattern)
-	delta2 = build_delta2(pattern)
-
 
 def build_delta1(pattern):
-	alphabet = string.ascii_lowercase
+	alphabet = string.ascii_lowercase + string.ascii_uppercase + ' '
 	delta1 = {}
 	for c in alphabet: delta1[c] = -1
 	for i, c in enumerate(pattern): delta1[c] = i
@@ -38,14 +33,30 @@ def build_delta2(pattern):
 		if delta2[j] == -1:
 			delta2[j] = (M-j-1) + M # will move j to the end of the pattern + move it along all pattern (whole pattern shifted)
 
-	print(delta2)
 	return delta2
 
 
-pattern = "ABCXXXABC"
-print(build_delta2(pattern))
-pattern = "ABYXCDEYX"
-print(build_delta2(pattern))
+
+def find(text, pattern):
+	N, M = len(text), len(pattern)
+
+	delta1 = build_delta1(pattern)
+	delta2 = build_delta2(pattern)
+	print("delta2:", delta2)
+	i = M - 1
+
+	while i < N:
+		j = M-1
+		while j >= 0 and text[i] == pattern[j]:
+			j -= 1
+			i -= 1
+
+		if j >= 0:
+			i += max(M-1-delta1[text[i]], delta2[j])
+		else:
+			print("Match at", i+1)
+			i += M + 1
+
 
 
 

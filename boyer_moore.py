@@ -18,24 +18,23 @@ def build_delta2(pattern):
 	M = len(pattern)
 	delta2 = [-1]*M
 
-	i = M-1
 	for j in range(M-2, -1, -1):
-		print(i, j)
-		if pattern[j] == pattern[i]:
-			i -= 1 # move both i and j to the left
-		else:
-			delta2[i] = max(delta2[i], j+1) # for the moment store the rightmost re-occurence of the
-												# suffix starting from j+1
-			i = M - 1 # reset i to the end of suffix
-
-	delta2[i] = max(delta2[i], 0) # for the moment store the rightmost re-occurence
-
-	delta2[-1] = 1
+		i = j-1
+		while i >= -1:
+			if i == -1 or pattern[i] != pattern[j]: # i == -1 in case of a suffix re-ocurence at the beginning of pattern
+				k = i+1
+				while k + j - i < M and pattern[k] == pattern[k+j-i]:
+					k += 1
+				if k + j - i == M:
+					delta2[j] = i+1
+					break
+			i -= 1
 
 	return delta2
 
 
-pattern = "ABCXABCC"
+
+pattern = "KBCAB"
 print(build_delta2(pattern))
 
 

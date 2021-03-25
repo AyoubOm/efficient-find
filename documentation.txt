@@ -1,0 +1,20 @@
+In this project we want to explore optimizations of searching a 'pattern' in a 'text'.
+
+The key idea of the optimization of the search is to skip some characters without comparison on them.
+
+================ Boyer Moore ===================
+
+- The key idea is to start from the end of the substring of text when comparing it to pattern.
+
+1- When starting from the last character of the substring if it does not match the last character of pattern
+we can move directly to the first occurence from the right of this character in pattern.
+	In particular, if the character does not exist in pattern, we can skip len(pattern) from text.
+
+	Note: this can lead to a shift backwards if the rightmost occurence is to the left of the mismatch, in this case we just slide by 1
+
+	-> we maintain an array that maps for each possible character in the alphabet of text its rightmost occurence in pattern
+
+2- If we have matched m characters from the end before a mismatch, we can move directly to the next occurence
+of this suffix in pattern that is not preceded by the character that caused the mismatch.
+
+	-> we maintain an array that maps for each position j in pattern (it considers it as causing the mismatch) the rightmost reoccurence of the suffix of pattern starting from j+1, this reoccurence must start with a character different from pattern[j]
